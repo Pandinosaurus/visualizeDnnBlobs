@@ -4,6 +4,8 @@ A sample code to visualize with OpenCV the deep learning blobs generated with th
 ## Purpose :
 This program provides a way to visualize the outputs of each layer of a Deep Convolutional Neural Network with OpenCV (https://github.com/opencv/opencv).
 
+<img src="./results/output1.png" align="center" height="25%" width="25%">
+
 ## Why :
 OpenCV (>= 3.2) already provides the dnn module. 
 The dnn module allows you to load a network trained with a dedicated framework/library (e.g. caffe, tensorflow) in OpenCV. It also allows you to catch each output of each layer when you perform a forward pass through the forward() method.
