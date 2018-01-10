@@ -3,7 +3,7 @@ A sample code to visualize with OpenCV the deep learning blobs generated with th
 
 ## Purpose :
 This program provides a way to visualize the outputs of each layer of a Deep Convolutional Neural Network with OpenCV.
-	
+
 ## Why :
 OpenCV (>= 3.2) already provides the dnn module. 
 The dnn module allows you to load a network trained with a dedicated framework/library (e.g. caffe, tensorflow) in OpenCV. It also allows you to catch each output of each layer when you perform a forward pass through the forward() method.
@@ -23,3 +23,10 @@ In this code sample, an example is provided with the GoogleNet model from the Ca
 ## What it does not :
 It does not demosntrate how to classify an image in OpenCV with a trained network.
 See the offical OpenCV documentation for the DNN module for a classification tutorial : https://docs.opencv.org/trunk/d5/de7/tutorial_dnn_googlenet.html.
+
+## Requirements :
+### Libraries :
+	- OpenCV, version >= 3.2, compiled for C++
+
+### Data :
+	- The /data/ folder provides you with almost everything you need to get started but the trained model (bvlc_googlenet.caffemodel). You can download it from : https://github.com/BVLC/caffe/tree/master/models/bvlc_googlenet.
