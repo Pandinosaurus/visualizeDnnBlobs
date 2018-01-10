@@ -1,0 +1,163 @@
+/*
+	File : visualizeDnnBlobs.cpp (single file / function + main)
+	Author : Rémi Ratajczak
+	E-mail : Remi.Ratjczak@gmail.com
+	License : GPL 3.0
+
+	Purpose :
+	This program provides a way to visualize the outputs of each layer of a Deep Convolutional Neural Network with OpenCV.
+	
+	Why? :
+	OpenCV (>= 3.2) already provides the dnn module.
+	The dnn module allows you to load a network trained with a dedicated framework/library (e.g. caffe, tensorflow) in OpenCV. It also allows you to catch each output of each layer when you perform a forward pass through the forward() method.
+	The ouptut of each layer is returned in a data structure named "blob".
+	A blob is a 4 dimensional array stored in an OpenCV Mat objet (cv::Mat).
+	You can't display a blob trivialy with cv::imshow() except for the output of the "prob" layer (at least with the Googlenet network).
+	If you want to see the result of a given layer, you need to extract the images stored in the blob.
+	This functionality has not already been integrated in the DNN module. Note that the inverse function, image to blob, already exist (demo in code below).
+
+	What it does :
+	In essence, this program demonstrates how to extract the images from the "blobs".
+	It generates one cv::Mat per filtered image per layer (e.g. per convolutional filter in a convolutional layer).
+	You can use the resulting cv::Mat images as you have the habit to do in OpenCV.
+	It allows you to display/store/save/study/understand the results of each layer direclty in OpenCV.
+	In this code sample, an example is provided with the GoogleNet model from the Caffe Model Zoo.
+
+	What it does not :
+	It does not demosntrate how to classify an image in OpenCV with a trained network.
+	See the offical OpenCV documentation for the DNN module for a classification tutorial : https://docs.opencv.org/trunk/d5/de7/tutorial_dnn_googlenet.html.
+ */
+
+
+/* OpenCV things */
+#include <opencv2/dnn.hpp>
+#include <opencv2/imgproc.hpp>
+#include <opencv2/highgui.hpp>
+#include <opencv2/core/utils/trace.hpp>
+/* Standard things */
+#include <fstream>
+#include <iostream>
+#include <cstdlib>
+
+using namespace cv; //boo, remove it
+using namespace cv::dnn; //boo, remove it
+using namespace std; //boo, remove it
+
+/* Parse a blob and output each image it contains in a cv::Mat. 
+   All cv::Mat are stored in a simpler data structure (akka std::vector) for latter use.
+   The returned images are not normalized. 
+   They displayed images for the quality check are normalized.
+*/
+std::vector<cv::Mat> extractImagesFromABlob(cv::Mat blob)
+{
+	//A container to store our images
+	std::vector<cv::Mat> vectorOfImages;
+
+	//A blob is a 4 dimensional matrix
+	if (blob.dims != 4) return vectorOfImages;
+
+	//Store each dimension size - it is ok to hardcode it since we checked the dimension
+	int nbOfImages = blob.size[0]; //= nb of input in the network
+	int nbOfChannels = blob.size[1]; //= nb of filtered images
+	int height = blob.size[2]; //= the height of the images
+	int width = blob.size[3]; //= the width of the images
+
+	//Access the elements of each channel for the first image
+	//Store the matrix in a vector of Images
+	for (int c = 0; c < nbOfChannels; c++)
+	{
+		cv::Mat tmpMat(width, height, CV_32F);
+		for (int w = 0; w < width; w++)
+		{
+			for (int h = 0; h < height; h++)
+			{
+				int indx[4] = { 0, c, h, w };
+				tmpMat.at<float>(h, w) = blob.at<float>(indx);
+			}
+		}
+		//Store the image(s) - note that the image has been normalized here
+		vectorOfImages.push_back(tmpMat);
+		
+		//Quality check
+		cv::normalize(tmpMat, tmpMat, 0, 1, CV_MINMAX);
+		cv::imshow("tmpMat_"+std::to_string(c), tmpMat);
+		cv::waitKey(0);
+	}
+
+	//It is bothering to see all these windows from the quality check, isn't it?
+	cv::destroyAllWindows();
+	return vectorOfImages;
+}
+
+
+int main(int argc, char **argv)
+{
+	//Load the model parameters paths in memory
+	//You will find the caffemodel there: https://github.com/BVLC/caffe/tree/master/models/bvlc_googlenet
+	String modelTxt = "..\\data\\bvlc_googlenet.prototxt"; //definition of the model
+	String modelBin = "..\\data\\bvlc_googlenet.caffemodel"; //weights of the model
+	String imageFile = "..\\data\\space_shuttle.jpg"; //image to read - you can use your own
+	String classNameFile = "..\\data\\synset_words.txt";//used for classification only - not presented here
+
+	//Try to instantiate the network with its parameters
+	Net net;
+	try {
+		net = dnn::readNetFromCaffe(modelTxt, modelBin);
+	}
+	catch (const cv::Exception& e) {
+		std::cerr << "Exception: " << e.what() << std::endl;
+		if (net.empty())
+		{
+			std::cerr << "Can't load network by using the following files: " << std::endl;
+			std::cerr << "prototxt:   " << modelTxt << std::endl;
+			std::cerr << "caffemodel: " << modelBin << std::endl;
+			std::cerr << "bvlc_googlenet.caffemodel can be downloaded here:" << std::endl;
+			std::cerr << "http://dl.caffe.berkeleyvision.org/bvlc_googlenet.caffemodel" << std::endl;
+			cv::waitKey(0);
+			exit(-1);
+		}
+	}
+	
+	//Read the image to process with the network
+	Mat img = imread(imageFile);
+	if (img.empty())
+	{
+		std::cerr << "Can't read image from the file: " << imageFile << std::endl;
+		exit(-1);
+	}
+
+	//Convert the image into a blob so that we could feed the network with it.
+	//The blob will internally store the image in floating point precision (CV_32F).
+	Mat inputBlob = blobFromImage(img, //the image to convert
+			 					 1.0f, //a multiplicative factor, in float due to the conversion realized by blobFromImage
+								 Size(224, 224), //the size of the image in the blob / should correspond to the expected input size of the data in the network / either crop/bilinear resizing can be used
+								 Scalar(104, 117, 123), //the mean of the images / in practice you should calculate it from your dataset / it is used to mean center the images
+								 false); //a boolean to convert a BGR image (default in OpenCV) to a RGB image / the format should correspond to the one used to train you network!
+
+	//For each layer in the network, we are going to perform a forward pass then store
+	//the output blobs and extract the images from them
+	for (string layer : net.getLayerNames()) //getLayerNames() gives a vector of string containing the names of every layer in the network - see prototxt for the names
+	{
+
+		//A container for our blobs
+		std::vector<cv::Mat> vectorOfBlobs;
+		
+		//Perform a forward pass
+		net.setInput(inputBlob, "data"); //Set the network input - with GoogleNet, "data" is the input layer
+		net.forward(vectorOfBlobs, layer);	//Operate a forward pass, output the result of the selected layer
+
+		//For each blobs in our vectorOfBlobs
+		for(cv::Mat blob : vectorOfBlobs )
+		{
+			//A simple vector that will contain each filtered image (i.e. the result of each operation in the layer)
+			std::vector<cv::Mat> vectorOfImages;
+
+			//if the blob is not empty, extract images from it
+			//DO NOT CHECK its size  the blob is a cv::Mat in nature, but the data are stored differently (4 dimensions) 
+			//than with the images and the size() method will result in an unhandled expection.
+			if (!blob.empty()) extractImagesFromABlob(blob);
+		} //for loop on blobs
+	} //for loop on layers
+
+	return 0;
+} //main
