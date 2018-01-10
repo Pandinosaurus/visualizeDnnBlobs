@@ -4,9 +4,8 @@ A sample code to visualize with OpenCV the deep learning blobs generated with th
 ## Purpose :
 This program provides a way to visualize the outputs of each layer of a Deep Convolutional Neural Network with OpenCV (https://github.com/opencv/opencv).
 
-<a> <img src="./results/output1.PNG" align="center" height="25%" width="25%">
-<img src="./results/output2.PNG" align="center" height="25%" width="25%">
-<img src="./results/output3.PNG" align="center" height="25%" width="25%"> </a>
+<a> <img src="./results/output1.PNG" align="center" margin-left="5%"  margin-right="5%" height="25%" width="25%">
+<img src="./results/output2.PNG" align="center"  margin-left="5%"  margin-right="5%" height="25%" width="25%"> </a>
 
 ## Why :
 OpenCV (>= 3.2) already provides the dnn module. 
