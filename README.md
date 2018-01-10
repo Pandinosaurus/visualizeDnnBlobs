@@ -10,7 +10,7 @@ The dnn module allows you to load a network trained with a dedicated framework/l
 The ouptut of each layer is returned in a data structure named "blob".
 A blob is a 4 dimensional array stored in an OpenCV Mat objet (cv::Mat). 
 You can't display a blob trivialy with cv::imshow() except for the output of the "prob" layer (at least with the Googlenet network). 
-If you want to see the result of a given layer, you need to extract the images stored in the blob.
+If you want to see the result of a given layer, you need to extract the images stored in its output the blob(s).
 This functionality has not already been integrated in the DNN module. Note that the inverse function, image to blob, already exist (demo in code below).
 
 ## What it does :
