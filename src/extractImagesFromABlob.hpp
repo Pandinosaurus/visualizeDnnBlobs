@@ -1,6 +1,6 @@
 /*
 	File : extractImagesFromABlob.cpp
-	Author : RÃ©mi Ratajczak
+	Author : Rémi Ratajczak
 	E-mail : Remi.Ratjczak@gmail.com
 	License : GPL 3.0
 */
@@ -9,6 +9,7 @@
 #include <opencv2/dnn.hpp>
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
+#include <opencv2/core/utils/trace.hpp>
 /* Standard things */
 #include <fstream>
 #include <iostream>
@@ -27,7 +28,7 @@ std::vector<cv::Mat> extractImagesFromABlob(cv::Mat blob)
 	//A blob is a 4 dimensional matrix
 	if (blob.dims != 4) return vectorOfImages;
 
-	//Store each dimension size - it is ok to hardcode it (for now) since we checked the dimension with a strong prior on it
+	//Store each dimension size - it is ok to hardcode it since we checked the dimension
 	int nbOfImages = blob.size[0]; //= nb of input in the network
 	int nbOfChannels = blob.size[1]; //= nb of filtered images
 	int height = blob.size[2]; //= the height of the images
@@ -40,7 +41,6 @@ std::vector<cv::Mat> extractImagesFromABlob(cv::Mat blob)
 		for (int c = 0; c < nbOfChannels; c++)
 		{
 			cv::Mat tmpMat(width, height, CV_32F);
-			
 			for (int w = 0; w < width; w++)
 			{
 				for (int h = 0; h < height; h++)
@@ -50,10 +50,10 @@ std::vector<cv::Mat> extractImagesFromABlob(cv::Mat blob)
 				}//loop on height
 			}//loop on width
 
-			//Store the image(s) - note that the image has > not < been normalized here
+			//Store the image(s) - note that the image has been normalized here
 			vectorOfImages.push_back(tmpMat);
 
-			//Quality check - normalize the image for visualization purpose
+			//Quality check
 			cv::normalize(tmpMat, tmpMat, 0, 1, CV_MINMAX);
 			cv::imshow("tmpMat_" + std::to_string(c), tmpMat);
 			cv::waitKey(0);
