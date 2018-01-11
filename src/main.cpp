@@ -1,6 +1,6 @@
 /*
 	File : main.cpp
-	Author : Rémi Ratajczak
+	Author : RÃ©mi Ratajczak
 	E-mail : Remi.Ratjczak@gmail.com
 	License : GPL 3.0
 
@@ -8,7 +8,7 @@
 	This program provides a way to visualize the outputs of each layer of a Deep Convolutional Neural Network with OpenCV.
 	
 	Why? :
-	OpenCV (>= 3.2) already provides the dnn module.
+	OpenCV (>= 3.3) already provides the dnn module.
 	The dnn module allows you to load a network trained with a dedicated framework/library (e.g. caffe, tensorflow) in OpenCV. It also allows you to catch each output of each layer when you perform a forward pass through the forward() method.
 	The ouptut of each layer is returned in a data structure named "blob".
 	A blob is a 4 dimensional array stored in an OpenCV Mat objet (cv::Mat).
@@ -33,7 +33,6 @@
 #include <opencv2/dnn.hpp>
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
-#include <opencv2/core/utils/trace.hpp>
 /* Standard things */
 #include <fstream>
 #include <iostream>
