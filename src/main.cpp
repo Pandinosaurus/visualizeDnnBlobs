@@ -1,6 +1,6 @@
 /*
 	File : main.cpp
-	Author : RÃ©mi Ratajczak
+	Author : Rémi Ratajczak
 	E-mail : Remi.Ratjczak@gmail.com
 	License : GPL 3.0
 

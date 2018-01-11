@@ -28,7 +28,7 @@ std::vector<cv::Mat> extractImagesFromABlob(cv::Mat blob)
 	//A blob is a 4 dimensional matrix
 	if (blob.dims != 4) return vectorOfImages;
 
-	//Store each dimension size - it is ok to hardcode it since we checked the dimension
+	//Store each dimension size - it is ok to hardcode it (for now) since we checked the dimension with a strong prior
 	int nbOfImages = blob.size[0]; //= nb of input in the network
 	int nbOfChannels = blob.size[1]; //= nb of filtered images
 	int height = blob.size[2]; //= the height of the images
@@ -50,10 +50,10 @@ std::vector<cv::Mat> extractImagesFromABlob(cv::Mat blob)
 				}//loop on height
 			}//loop on width
 
-			//Store the image(s) - note that the image has been normalized here
+			//Store the image(s) - note that the image has > not < been normalized here
 			vectorOfImages.push_back(tmpMat);
 
-			//Quality check
+			//Quality check - normalize the image for visualization purpose
 			cv::normalize(tmpMat, tmpMat, 0, 1, CV_MINMAX);
 			cv::imshow("tmpMat_" + std::to_string(c), tmpMat);
 			cv::waitKey(0);
