@@ -1,8 +1,8 @@
 /*
 	File : main.cpp
-	Author : Rémi Ratajczak
+	Author : RÃ©mi Ratajczak
 	E-mail : Remi.Ratjczak@gmail.com
-	License : GPL 3.0
+	License : MIT
 
 	Purpose :
 	This program provides a way to visualize the outputs of each layer of a Deep Convolutional Neural Network with OpenCV.
