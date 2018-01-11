@@ -32,7 +32,7 @@ See the offical OpenCV documentation for the DNN module for a classification tut
 	- OpenCV (version >= 3.3)
 	
 ### OS :
-	- Windows 10 (you may need to change the relative paths on Unix)
+	- Windows 10 with Visual Studio 2017 (you may need to change the relative paths on Unix)
 
 ### Data :
 	- The /data/ folder provides you with almost everything you need to get started but the trained model (bvlc_googlenet.caffemodel). 
