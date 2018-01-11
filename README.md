@@ -8,7 +8,7 @@ An easy way to visualize the output blobs of each layer of a Deep Convolutional 
 <img src="./results/output2.PNG" align="center" height="25%" width="25%"> </a>
 
 ## Why :
-OpenCV (>= 3.2) already provides the dnn module. 
+OpenCV (>= 3.3) already provides the dnn module. 
 The dnn module allows you to load a network trained with a dedicated framework/library (e.g. caffe, tensorflow) in OpenCV. It also allows you to catch each output of each layer when you perform a forward pass through the forward() method.
 The ouptut of each layer is returned in a data structure named "blob".
 A blob is a 4 dimensional array stored in an OpenCV Mat objet (cv::Mat). 
@@ -29,7 +29,7 @@ See the offical OpenCV documentation for the DNN module for a classification tut
 
 ## Requirements :
 ### Libraries :
-	- OpenCV (version >= 3.2)
+	- OpenCV (version >= 3.3)
 	
 ### OS :
 	- Windows 10 (you may need to change the relative paths on Unix)
