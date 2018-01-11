@@ -1,5 +1,5 @@
 /*
-	File : visualizeDnnBlobs.cpp (single file / function + main)
+	File : main.cpp
 	Author : Rémi Ratajczak
 	E-mail : Remi.Ratjczak@gmail.com
 	License : GPL 3.0
@@ -38,57 +38,12 @@
 #include <fstream>
 #include <iostream>
 #include <cstdlib>
+/* The function to extract images from a blob */
+#include "extractImagesFromABlob.hpp"
 
 using namespace cv; //boo, remove it
 using namespace cv::dnn; //boo, remove it
 using namespace std; //boo, remove it
-
-/* Parse a blob and output each image it contains in a cv::Mat. 
-   All cv::Mat are stored in a simpler data structure (akka std::vector) for latter use.
-   The returned images are not normalized. 
-   They displayed images for the quality check are normalized.
-*/
-std::vector<cv::Mat> extractImagesFromABlob(cv::Mat blob)
-{
-	//A container to store our images
-	std::vector<cv::Mat> vectorOfImages;
-
-	//A blob is a 4 dimensional matrix
-	if (blob.dims != 4) return vectorOfImages;
-
-	//Store each dimension size - it is ok to hardcode it since we checked the dimension
-	int nbOfImages = blob.size[0]; //= nb of input in the network
-	int nbOfChannels = blob.size[1]; //= nb of filtered images
-	int height = blob.size[2]; //= the height of the images
-	int width = blob.size[3]; //= the width of the images
-
-	//Access the elements of each channel for the first image
-	//Store the matrix in a vector of Images
-	for (int c = 0; c < nbOfChannels; c++)
-	{
-		cv::Mat tmpMat(width, height, CV_32F);
-		for (int w = 0; w < width; w++)
-		{
-			for (int h = 0; h < height; h++)
-			{
-				int indx[4] = { 0, c, h, w };
-				tmpMat.at<float>(h, w) = blob.at<float>(indx);
-			}
-		}
-		//Store the image(s) - note that the image has been normalized here
-		vectorOfImages.push_back(tmpMat);
-		
-		//Quality check
-		cv::normalize(tmpMat, tmpMat, 0, 1, CV_MINMAX);
-		cv::imshow("tmpMat_"+std::to_string(c), tmpMat);
-		cv::waitKey(0);
-	}
-
-	//It is bothering to see all these windows from the quality check, isn't it?
-	cv::destroyAllWindows();
-	return vectorOfImages;
-}
-
 
 int main(int argc, char **argv)
 {
@@ -155,7 +110,7 @@ int main(int argc, char **argv)
 			//if the blob is not empty, extract images from it
 			//DO NOT CHECK its size  the blob is a cv::Mat in nature, but the data are stored differently (4 dimensions) 
 			//than with the images and the size() method will result in an unhandled expection.
-			if (!blob.empty()) extractImagesFromABlob(blob);
+			if (!blob.empty()) extractImagesFromABlob(blob); //see visualizeBlobs.cpp
 		} //for loop on blobs
 	} //for loop on layers
 
