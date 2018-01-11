@@ -1,8 +1,8 @@
 /*
 	File : extractImagesFromABlob.cpp
-	Author : Rémi Ratajczak
+	Author : RÃ©mi Ratajczak
 	E-mail : Remi.Ratjczak@gmail.com
-	License : GPL 3.0
+	License : MIT
 */
 
 /* OpenCV things */
