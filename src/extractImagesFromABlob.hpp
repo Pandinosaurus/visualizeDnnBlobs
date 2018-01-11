@@ -1,6 +1,6 @@
 /*
 	File : extractImagesFromABlob.cpp
-	Author : Rémi Ratajczak
+	Author : RÃ©mi Ratajczak
 	E-mail : Remi.Ratjczak@gmail.com
 	License : GPL 3.0
 */
@@ -28,7 +28,7 @@ std::vector<cv::Mat> extractImagesFromABlob(cv::Mat blob)
 	//A blob is a 4 dimensional matrix
 	if (blob.dims != 4) return vectorOfImages;
 
-	//Store each dimension size - it is ok to hardcode it since we checked the dimension
+	//Store each dimension size - it is ok to hardcode (for now) since we checked the dimension with a strong prior on it
 	int nbOfImages = blob.size[0]; //= nb of input in the network
 	int nbOfChannels = blob.size[1]; //= nb of filtered images
 	int height = blob.size[2]; //= the height of the images
