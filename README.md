@@ -23,7 +23,7 @@ It allows you to display/store/save/study/understand the results of each layer d
 In this code sample, an example is provided with the GoogleNet model from the Caffe Model Zoo.
 
 ## What it does not :
-It does not demosntrate how to classify an image in OpenCV with a trained network.
+It does not demonstrate how to classify an image in OpenCV with a trained network.
 See the offical OpenCV documentation for the DNN module for a classification tutorial : https://docs.opencv.org/trunk/d5/de7/tutorial_dnn_googlenet.html.
 
 ## Requirements :
