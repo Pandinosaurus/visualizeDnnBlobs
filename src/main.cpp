@@ -110,7 +110,7 @@ int main(int argc, char **argv)
 			//if the blob is not empty, extract images from it
 			//DO NOT CHECK its size  the blob is a cv::Mat in nature, but the data are stored differently (4 dimensions) 
 			//than with the images and the size() method will result in an unhandled expection.
-			if (!blob.empty()) extractImagesFromABlob(blob); //see visualizeBlobs.cpp
+			if (!blob.empty()) extractImagesFromABlob(blob); //see extractImagesFromABlob.hpp
 		} //for loop on blobs
 	} //for loop on layers
 

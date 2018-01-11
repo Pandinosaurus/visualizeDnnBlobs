@@ -17,8 +17,8 @@
 
 /* Parse a blob and output each image it contains in a cv::Mat.
    All cv::Mat are stored in a simpler data structure (akka std::vector) for latter use.
-   The returned images are not normalized.
-   They displayed images for the quality check are normalized.
+   The returned images are in floating point precision. They are not normalized.
+   The quality check is done with CV_8U images and a JET colormap.
 */
 std::vector<cv::Mat> extractImagesFromABlob(cv::Mat blob)
 {
@@ -41,21 +41,32 @@ std::vector<cv::Mat> extractImagesFromABlob(cv::Mat blob)
 		for (int c = 0; c < nbOfChannels; c++)
 		{
 			cv::Mat tmpMat(width, height, CV_32F);
+
 			for (int w = 0; w < width; w++)
 			{
 				for (int h = 0; h < height; h++)
 				{
 					int indx[4] = { 0, c, h, w };
-					tmpMat.at<float>(h, w) = blob.at<float>(indx);
+					tmpMat.at<float>(h, w) = blob.at<float>(indx); //blobs store images in floating point precision
 				}//loop on height
 			}//loop on width
 
+			//Sanity check
+			if (tmpMat.empty()) {
+				std::cerr << "No image retrieved --> quit function extractImagesFromABlob." << std::endl;
+				return vectorOfImages;
+			}
+
 			//Store the image(s) - note that the image has > not < been normalized here
+			//The image is still int floating point precision
 			vectorOfImages.push_back(tmpMat);
 
-			//Quality check - normalize the image for visualization purpose
-			cv::normalize(tmpMat, tmpMat, 0, 1, CV_MINMAX);
-			cv::imshow("tmpMat_" + std::to_string(c), tmpMat);
+			//Quality check
+			tmpMat.convertTo(tmpMat, CV_8UC1); //float to unsigned char for applyColorMap only
+			cv::Mat tmpMatColored;
+			cv::cvtColor(tmpMat, tmpMatColored, cv::COLOR_GRAY2BGR);
+			cv::applyColorMap(tmpMatColored, tmpMatColored, cv::COLORMAP_JET);
+			cv::imshow("tmpMat_" + std::to_string(c), tmpMatColored);
 			cv::waitKey(0);
 
 		}//loop on channels
