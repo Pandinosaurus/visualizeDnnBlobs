@@ -12,8 +12,9 @@ add_executable( visualizeDnnBlobs
 target_link_libraries( visualizeDnnBlobs 
 			${OpenCV_LIBS} )
 
+#You may need to change the change the "${OpenCV_DIR}/install/x64/vc15/bin/" to your installation path
 add_custom_command(TARGET visualizeDnnBlobs POST_BUILD
 COMMAND ${CMAKE_COMMAND} -E copy_directory
-"D:/lib/opencv/build/x64/vs2017/install/x64/vc15/bin/"
+${OpenCV_DIR}/install/x64/vc15/bin/
 "$<TARGET_FILE_DIR:visualizeDnnBlobs>"
 )
