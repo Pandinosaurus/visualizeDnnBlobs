@@ -1,5 +1,5 @@
 /*
-	File : extractImagesFromABlob.cpp
+	File : extractImagesFromABlob.hpp
 	Author : Rémi Ratajczak
 	E-mail : Remi.Ratjczak@gmail.com
 	License : MIT
@@ -18,7 +18,6 @@
 /* Parse a blob and output each image it contains in a cv::Mat.
    All cv::Mat are stored in a simpler data structure (akka std::vector) for latter use.
    The returned images are in floating point precision. They are not normalized.
-   The quality check is done with CV_8U images and a JET colormap.
 */
 std::vector<cv::Mat> extractImagesFromABlob(cv::Mat blob)
 {
@@ -61,19 +60,9 @@ std::vector<cv::Mat> extractImagesFromABlob(cv::Mat blob)
 			//The image is still int floating point precision
 			vectorOfImages.push_back(tmpMat);
 
-			//Quality check
-			tmpMat.convertTo(tmpMat, CV_8UC1); //float to unsigned char for applyColorMap only
-			cv::Mat tmpMatColored;
-			cv::cvtColor(tmpMat, tmpMatColored, cv::COLOR_GRAY2BGR);
-			cv::applyColorMap(tmpMatColored, tmpMatColored, cv::COLORMAP_JET);
-			cv::imshow("tmpMat_" + std::to_string(c), tmpMatColored);
-			cv::waitKey(0);
-
 		}//loop on channels
 	}//loop on images
 
-	//It is bothering to see all these windows from the quality check, isn't it?
-	cv::destroyAllWindows();
 	return vectorOfImages;
 
 }//extractImagesFromABlob function

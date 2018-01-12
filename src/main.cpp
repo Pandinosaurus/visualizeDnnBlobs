@@ -110,7 +110,23 @@ int main(int argc, char **argv)
 			//if the blob is not empty, extract images from it
 			//DO NOT CHECK its size  the blob is a cv::Mat in nature, but the data are stored differently (4 dimensions) 
 			//than with the images and the size() method will result in an unhandled expection.
-			if (!blob.empty()) extractImagesFromABlob(blob); //see extractImagesFromABlob.hpp
+			if (!blob.empty()) vectorOfImages = extractImagesFromABlob(blob); //see extractImagesFromABlob.hpp
+
+			//Quality check is done with CV_8U images and a JET colormap
+			//Quality check
+			for (auto image : vectorOfImages)
+			{
+				image.convertTo(image, CV_8UC1); //float to unsigned char for applyColorMap only
+				cv::Mat tmpMatColored;
+				cv::cvtColor(image, tmpMatColored, cv::COLOR_GRAY2BGR);
+				cv::applyColorMap(tmpMatColored, tmpMatColored, cv::COLORMAP_JET);
+				cv::imshow(layer+" : output", tmpMatColored);
+				cv::waitKey(0);
+			}
+
+			//Destroy bothering windows from Quality check
+			cv::destroyAllWindows();
+
 		} //for loop on blobs
 	} //for loop on layers
 
