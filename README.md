@@ -35,5 +35,5 @@ See the offical OpenCV documentation for the DNN module for a classification tut
 
 ### Data :
 	- The /data/ folder provides you with almost everything you need to get started but the trained model (bvlc_googlenet.caffemodel). 
-	You can download it from : https://github.com/BVLC/caffe/tree/master/models/bvlc_googlenet.
+	You can download it from : http://dl.caffe.berkeleyvision.org/bvlc_googlenet.caffemodel
 	Once downloaded, put it in the /data/ folder.
