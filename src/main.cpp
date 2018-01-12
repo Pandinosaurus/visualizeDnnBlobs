@@ -8,7 +8,7 @@
 	This program provides a way to visualize the outputs of each layer of a Deep Convolutional Neural Network with OpenCV.
 	
 	Why? :
-	OpenCV (>= 3.3) already provides the dnn module.
+	OpenCV (>= 3.4) already provides the dnn module.
 	The dnn module allows you to load a network trained with a dedicated framework/library (e.g. caffe, tensorflow) in OpenCV. It also allows you to catch each output of each layer when you perform a forward pass through the forward() method.
 	The ouptut of each layer is returned in a data structure named "blob".
 	A blob is a 4 dimensional array stored in an OpenCV Mat objet (cv::Mat).
@@ -48,7 +48,7 @@ using namespace std; //boo, remove it
 int main(int argc, char **argv)
 {
 	//Load the model parameters paths in memory
-	//You will find the caffemodel there: https://github.com/BVLC/caffe/tree/master/models/bvlc_googlenet
+	//You will find the caffemodel there: http://dl.caffe.berkeleyvision.org/bvlc_googlenet.caffemodel
 	String modelTxt = "..\\data\\bvlc_googlenet.prototxt"; //definition of the model
 	String modelBin = "..\\data\\bvlc_googlenet.caffemodel"; //weights of the model
 	String imageFile = "..\\data\\space_shuttle.jpg"; //image to read - you can use your own
