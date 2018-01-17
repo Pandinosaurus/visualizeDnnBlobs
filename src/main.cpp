@@ -117,7 +117,7 @@ int main(int argc, char **argv)
 			//if the blob is not empty, extract images from it
 			//DO NOT CHECK its size  the blob is a cv::Mat in nature, but the data are stored differently (4 dimensions) 
 			//than with the images and the size() method will result in an unhandled expection.
-			if (!blob.empty()) vectorOfImages = extractImagesFromABlob2(blob); //see extractImagesFromABlob.hpp
+			if (!blob.empty()) vectorOfImages = extractImagesFromABlob(blob); //see extractImagesFromABlob.hpp
 
 			//Quality check is done with CV_8U images and a JET colormap
 			//Quality check
