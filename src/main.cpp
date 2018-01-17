@@ -52,6 +52,7 @@ int main(int argc, char **argv)
 	String modelTxt = "..\\data\\bvlc_googlenet.prototxt"; //definition of the model
 	String modelBin = "..\\data\\bvlc_googlenet.caffemodel"; //weights of the model
 	String imageFile = "..\\data\\space_shuttle.jpg"; //image to read - you can use your own
+	String imageFile2 = "..\\data\\space_shuttle2.jpg"; //image to read - you can use your own
 	String classNameFile = "..\\data\\synset_words.txt";//used for classification only - not presented here
 
 	//Try to instantiate the network with its parameters
@@ -80,14 +81,19 @@ int main(int argc, char **argv)
 		std::cerr << "Can't read image from the file: " << imageFile << std::endl;
 		exit(-1);
 	}
+	
+	//Input images in a vector
+	std::vector< cv::Mat > inputImgs;
+	inputImgs.push_back(img);
+	inputImgs.push_back(img2);
 
 	//Convert the image into a blob so that we could feed the network with it.
 	//The blob will internally store the image in floating point precision (CV_32F).
-	Mat inputBlob = blobFromImage(img, //the image to convert
-			 					 1.0f, //a multiplicative factor, in float due to the conversion realized by blobFromImage
-								 Size(224, 224), //the size of the image in the blob / should correspond to the expected input size of the data in the network / either crop/bilinear resizing can be used
-								 Scalar(104, 117, 123), //the mean of the images / in practice you should calculate it from your dataset / it is used to mean center the images
-								 false); //a boolean to convert a BGR image (default in OpenCV) to a RGB image / the format should correspond to the one used to train you network!
+	Mat inputBlob = blobFromImages(inputImgs, //the image to convert
+		1.0f, //a multiplicative factor, in float due to the conversion realized by blobFromImage
+		Size(224, 224), //the size of the image in the blob / should correspond to the expected input size of the data in the network / either crop/bilinear resizing can be used
+		Scalar(104, 117, 123), //the mean of the images / in practice you should calculate it from your dataset / it is used to mean center the images
+		false); //a boolean to convert a BGR image (default in OpenCV) to a RGB image / the format should correspond to the one used to train you network!
 
 	//For each layer in the network, we are going to perform a forward pass then store
 	//the output blobs and extract the images from them

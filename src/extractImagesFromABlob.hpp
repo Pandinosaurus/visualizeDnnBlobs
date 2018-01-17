@@ -45,7 +45,7 @@ std::vector<cv::Mat> extractImagesFromABlob(cv::Mat blob)
 			{
 				for (int h = 0; h < height; h++)
 				{
-					int indx[4] = { 0, c, h, w };
+					int indx[4] = { i, c, h, w };
 					tmpMat.at<float>(h, w) = blob.at<float>(indx); //blobs store images in floating point precision
 				}//loop on height
 			}//loop on width
