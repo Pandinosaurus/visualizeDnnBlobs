@@ -76,6 +76,7 @@ int main(int argc, char **argv)
 	
 	//Read the image to process with the network
 	Mat img = imread(imageFile);
+	Mat img2 = imread(imageFile2);
 	if (img.empty())
 	{
 		std::cerr << "Can't read image from the file: " << imageFile << std::endl;
@@ -90,10 +91,10 @@ int main(int argc, char **argv)
 	//Convert the image into a blob so that we could feed the network with it.
 	//The blob will internally store the image in floating point precision (CV_32F).
 	Mat inputBlob = blobFromImages(inputImgs, //the image to convert
-		1.0f, //a multiplicative factor, in float due to the conversion realized by blobFromImage
-		Size(224, 224), //the size of the image in the blob / should correspond to the expected input size of the data in the network / either crop/bilinear resizing can be used
-		Scalar(104, 117, 123), //the mean of the images / in practice you should calculate it from your dataset / it is used to mean center the images
-		false); //a boolean to convert a BGR image (default in OpenCV) to a RGB image / the format should correspond to the one used to train you network!
+								   1.0f, //a multiplicative factor, in float due to the conversion realized by blobFromImage
+								   Size(224, 224), //the size of the image in the blob / should correspond to the expected input size of the data in the network / either crop/bilinear resizing can be used
+								   Scalar(104, 117, 123), //the mean of the images / in practice you should calculate it from your dataset / it is used to mean center the images
+								   false); //a boolean to convert a BGR image (default in OpenCV) to a RGB image / the format should correspond to the one used to train you network!
 
 	//For each layer in the network, we are going to perform a forward pass then store
 	//the output blobs and extract the images from them
@@ -116,19 +117,30 @@ int main(int argc, char **argv)
 			//if the blob is not empty, extract images from it
 			//DO NOT CHECK its size  the blob is a cv::Mat in nature, but the data are stored differently (4 dimensions) 
 			//than with the images and the size() method will result in an unhandled expection.
-			if (!blob.empty()) vectorOfImages = extractImagesFromABlob(blob); //see extractImagesFromABlob.hpp
+			if (!blob.empty()) vectorOfImages = extractImagesFromABlob2(blob); //see extractImagesFromABlob.hpp
 
 			//Quality check is done with CV_8U images and a JET colormap
 			//Quality check
 			for (auto image : vectorOfImages)
 			{
-				image.convertTo(image, CV_8UC1); //float to unsigned char for applyColorMap only
-				cv::Mat tmpMatColored;
-				cv::cvtColor(image, tmpMatColored, cv::COLOR_GRAY2BGR);
-				cv::applyColorMap(tmpMatColored, tmpMatColored, cv::COLORMAP_JET);
-				cv::imshow(layer+" : output", tmpMatColored);
-				cv::waitKey(0);
-			}
+				std::cout << "nbOfImages : " << vectorOfImages.size() << std::endl;
+				std::cout << "channels : " << image.channels() << std::endl;
+				std::cout << "size : " << image.size() << std::endl;
+
+				//Display each 2D channel contained in the current image
+				//The channels are obtained using the split method
+				std::vector< cv::Mat > channels;
+				cv::split(image, channels);
+				for (auto channel : channels)
+				{
+					channel.convertTo(channel, CV_8UC1); //float to unsigned char for applyColorMap only
+					cv::Mat tmpMatColored;
+					cv::cvtColor(channel, tmpMatColored, cv::COLOR_GRAY2BGR);
+					cv::applyColorMap(tmpMatColored, tmpMatColored, cv::COLORMAP_JET);
+					cv::imshow(layer + " : output", tmpMatColored);
+					cv::waitKey(0);
+				}//for loop on channels
+			}//for loop on images
 
 			//Destroy bothering windows from Quality check
 			cv::destroyAllWindows();

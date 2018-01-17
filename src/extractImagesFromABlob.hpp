@@ -15,9 +15,12 @@
 #include <iostream>
 #include <cstdlib>
 
-/* Parse a blob and output each image it contains in a cv::Mat.
-   All cv::Mat are stored in a simpler data structure (akka std::vector) for latter use.
-   The returned images are in floating point precision. They are not normalized.
+/* Parse a 4D blob and output the 2D images it contains in a std::vector< cv::Mat >. 
+   One image is output per image input in the batch. 
+   The number of channels for each image corresponds to the size of the layer's output.
+   Each channel of each image could be then accessed through the cv::split() method.
+   The channels of the returned images are all in floating point precision (CV_32F). 
+   They are not normalized.
 */
 std::vector<cv::Mat> extractImagesFromABlob(cv::Mat blob)
 {
@@ -37,30 +40,44 @@ std::vector<cv::Mat> extractImagesFromABlob(cv::Mat blob)
 	//Store the matrix in a vector of Images
 	for (int i = 0; i < nbOfImages; i++)
 	{
+		//store all the channels for each image
+		std::vector<cv::Mat> vectorOfChannels;
+
 		for (int c = 0; c < nbOfChannels; c++)
 		{
-			cv::Mat tmpMat(width, height, CV_32F);
+			//store the current channel
+			cv::Mat currentChannel(width, height, CV_32F); 
 
 			for (int w = 0; w < width; w++)
 			{
 				for (int h = 0; h < height; h++)
 				{
 					int indx[4] = { i, c, h, w };
-					tmpMat.at<float>(h, w) = blob.at<float>(indx); //blobs store images in floating point precision
+					currentChannel.at<float>(h, w) = blob.at<float>(indx); //blobs store images in floating point precision
 				}//loop on height
 			}//loop on width
 
-			//Sanity check
-			if (tmpMat.empty()) {
+			 //Sanity check
+			if (currentChannel.empty()) {
 				std::cerr << "No image retrieved --> quit function extractImagesFromABlob." << std::endl;
 				return vectorOfImages;
 			}
 
-			//Store the image(s) - note that the image has > not < been normalized here
-			//The image is still int floating point precision
-			vectorOfImages.push_back(tmpMat);
+			//Save the current channel
+			//The channel is still in floating point precision
+			//Note that the channel has > not < been normalized here
+			vectorOfChannels.push_back(currentChannel);
 
 		}//loop on channels
+
+		//Merge all the channels in one mat
+		cv::Mat imgToOutput;
+		cv::merge(vectorOfChannels, imgToOutput);
+
+		//Store the image with all its channels concatenated 
+		//All data are in CV_32F, channels not normalized
+		vectorOfImages.push_back(imgToOutput);
+
 	}//loop on images
 
 	return vectorOfImages;
