@@ -1,3 +1,6 @@
+# /!\ NEWS /!\
+The imagesFromBlob method has been integrated to the dnn module of OpenCV thanks to the help and great reviews from @dkurt and @vpisarev. A tutorial will come soon to use this method for visualization purpose. In a nutshell : you should handle mean add & normalization manually just like it is done in this repository.
+
 # visualizeDnnBlobs
 A sample code to visualize with OpenCV the deep learning blobs generated with the OpenCV dnn module.
 
