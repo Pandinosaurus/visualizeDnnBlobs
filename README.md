@@ -1,5 +1,8 @@
-# /!\ NEWS /!\
+# !News!
 The imagesFromBlob method has been integrated to the dnn module of OpenCV thanks to the help and great reviews from @dkurt and @vpisarev. A tutorial will come soon to use this method for visualization purpose. In a nutshell : you should handle mean add & normalization manually just like it is done in this repository.
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------
 
 # visualizeDnnBlobs
 A sample code to visualize with OpenCV the deep learning blobs generated with the OpenCV dnn module.
@@ -29,12 +32,12 @@ It does not demonstrate how to classify an image in OpenCV with a trained networ
 See the offical OpenCV documentation for the DNN module for a classification tutorial : https://docs.opencv.org/trunk/d5/de7/tutorial_dnn_googlenet.html.
 
 ## Requirements :
+### Compile :
+	- CMake (version >= 2.8)
 ### Libraries :
 	- OpenCV (version >= 3.4)
-	
 ### OS :
 	- Windows 10 with Visual Studio 2017 (you may need to change the relative paths on Unix)
-
 ### Data :
 	- The /data/ folder provides you with almost everything you need to get started but the trained model (bvlc_googlenet.caffemodel). 
 	You can download it from : http://dl.caffe.berkeleyvision.org/bvlc_googlenet.caffemodel
