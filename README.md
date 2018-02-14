@@ -2,7 +2,7 @@
 The imagesFromBlob method has been integrated in a currated version to the dnn module of OpenCV thanks to the help and great reviews from @dkurt and @vpisarev.
 -----------------------------------------------------------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------------------------------------
-### A New tutorial using dnn::imagesFromBlob() is now available at https://github.com/Pandinosaurus/visualizeDnnBlobsOCV
+### A New tutorial using the method dnn::imagesFromBlob is now available at https://github.com/Pandinosaurus/visualizeDnnBlobsOCV
 -----------------------------------------------------------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------------------------------------
 
