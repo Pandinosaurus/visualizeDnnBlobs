@@ -1,5 +1,5 @@
 # !News!
-The imagesFromBlob method has been integrated to the dnn module of OpenCV thanks to the help and great reviews from @dkurt and @vpisarev. A tutorial will come soon to use this method for visualization purpose. In a nutshell : you should handle mean add & normalization manually just like it is done in this repository.
+The imagesFromBlob method has been integrated in a currated version to the dnn module of OpenCV thanks to the help and great reviews from @dkurt and @vpisarev.
 
 -----------------------------------------------------------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------------------------------------
