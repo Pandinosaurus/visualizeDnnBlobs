@@ -1,4 +1,4 @@
-# !News!
+# News
 The extractImagesFromBlob method has been integrated in a currated (akka. dnn::imagesFromBlob) version to the dnn module of OpenCV thanks to the help and great reviews from @dkurt and @vpisarev.
 -----------------------------------------------------------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------------------------------------
@@ -6,7 +6,9 @@ The extractImagesFromBlob method has been integrated in a currated (akka. dnn::i
 -----------------------------------------------------------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------------------------------------
 
-# visualizeDnnBlobs
+
+
+# Presentation
 A sample code to visualize with OpenCV the deep learning blobs generated with the OpenCV dnn module.
 
 ## Purpose :
