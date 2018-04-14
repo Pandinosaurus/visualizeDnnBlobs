@@ -1,5 +1,5 @@
 # News
-The extractImagesFromBlob method has been integrated in a currated (akka. dnn::imagesFromBlob) version to the dnn module of OpenCV thanks to the help and great reviews from @dkurt and @vpisarev.
+The extractImagesFromBlob method has been integrated in a currated version to the dnn module of OpenCV thanks to the help and great reviews from @dkurt and @vpisarev. See OpenCV >= 3.4.1, method dnn::imagesFromBlob.
 -----------------------------------------------------------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------------------------------------
 ### A New tutorial using the method dnn::imagesFromBlob is now available at https://github.com/Pandinosaurus/visualizeDnnBlobsOCV
@@ -17,7 +17,7 @@ An easy way to visualize the output blobs of each layer of a Deep Convolutional 
 <a> <img src="./results/output1.PNG" align="center" height="25%" width="25%"> <img src="./results/output2.PNG" align="center" height="25%" width="25%"> <img src="./results/output3.PNG" align="center" height="25%" width="25%"> </a>
 
 ## Why :
-OpenCV (>= 3.4) already provides the dnn module. 
+OpenCV (3.4) already provides the dnn module. 
 The dnn module allows you to load a network trained with a dedicated framework/library (e.g. caffe, tensorflow) in OpenCV. It also allows you to catch each output of each layer when you perform a forward pass through the forward() method.
 The ouptut of each layer is returned in a data structure named "blob".
 A blob is a 4 dimensional array stored in an OpenCV Mat objet (cv::Mat). 
