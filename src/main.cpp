@@ -45,6 +45,14 @@ using namespace cv; //boo, remove it
 using namespace cv::dnn; //boo, remove it
 using namespace std; //boo, remove it
 
+// Handle separations on windows and unix
+#ifdef __unix__   
+std::string sep = "/";
+#elif ( defined(_WIN32) || defined(_WIN64) )
+std::string sep = "\\";
+#else
+std::string sep = "/"; //default
+#endif
 
 void visualizeInputsFromBlob(cv::Mat inputBlob, cv::Size size, double scaleFactor, cv::Scalar mean)
 {
@@ -132,11 +140,12 @@ int main(int argc, char **argv)
 {
     //Load the model parameters paths in memory
     //You will find the caffemodel there: http://dl.caffe.berkeleyvision.org/bvlc_googlenet.caffemodel
-    String modelTxt = "..\\data\\bvlc_googlenet.prototxt"; //definition of the model
-    String modelBin = "..\\data\\bvlc_googlenet.caffemodel"; //weights of the model
-    String imageFile = "..\\data\\space_shuttle.jpg"; //image to read - you can use your own
-    String imageFile2 = "..\\data\\space_shuttle2.jpg"; //image to read - you can use your own
-    String classNameFile = "..\\data\\synset_words.txt";//used for classification only - not presented here
+    std::string dataPath = ".." + sep + "data" + sep;
+    std::string modelTxt = dataPath+"bvlc_googlenet.prototxt"; //definition of the model
+    std::string modelBin = dataPath+"bvlc_googlenet.caffemodel"; //weights of the model
+    std::string imageFile = dataPath+"space_shuttle.jpg"; //image to read - you can use your own
+    std::string imageFile2 = dataPath+"space_shuttle2.jpg"; //image to read - you can use your own
+    std::string classNameFile = dataPath+"synset_words.txt";//used for classification only - not presented here
 
     //Try to instantiate the network with its parameters
     Net net;
