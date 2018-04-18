@@ -41,7 +41,8 @@ See the offical OpenCV documentation for the DNN module for a classification tut
 ### Libraries :
 	- OpenCV (version >= 3.4)
 ### OS :
-	- Windows 10 with Visual Studio 2017 (you may need to change the relative paths on Unix)
+	- Windows 10 with Visual Studio 2017 (msvc2015_64)
+	- Unix with Makefiles
 ### Data :
 	- The /data/ folder provides you with almost everything you need to get started but the trained model (bvlc_googlenet.caffemodel). 
 	You can download it from : http://dl.caffe.berkeleyvision.org/bvlc_googlenet.caffemodel
