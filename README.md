@@ -14,10 +14,10 @@ A sample code to visualize with OpenCV the deep learning blobs generated with th
 ## Purpose :
 An easy way to visualize the output blobs of each layer of a Deep Convolutional Neural Network with OpenCV.(https://github.com/opencv/opencv).
 
-With per feature map normalization :
+With per feature map normalization : <br>
 <a> <img src="./results/output1.PNG" align="center" height="25%" width="25%"> <img src="./results/output2.PNG" align="center" height="25%" width="25%"> <img src="./results/output3.PNG" align="center" height="25%" width="25%"> </a>
 
-With Nvidia Digits like normalization :
+With Nvidia Digits like normalization (=/= feature map than above) : <br>
 <a> <img src="./results/other_output_like_digits1.jpg" align="center" height="25%" width="25%"> <img src="./results/other_output_like_digits2.jpg" align="center" height="25%" width="25%"> <img src="./results/other_output_like_digits3.jpg" align="center" height="25%" width="25%"> </a>
 
 ## Why :
