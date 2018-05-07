@@ -56,84 +56,84 @@ std::string sep = "/"; //default
 
 void visualizeInputsFromBlob(cv::Mat inputBlob, cv::Size size, double scaleFactor, cv::Scalar mean)
 {
-    //A simple vector that will contain each filtered image (i.e. the result of each operation in the layer)
+    // A simple vector that will contain each filtered image (i.e. the result of each operation in the layer)
     std::vector<cv::Mat> vectorOfInputImagesFromBlob;
 
-    //if the blob is not empty, extract images from it
-    //DO NOT CHECK its size  the blob is a cv::Mat in nature, but the data are stored differently (4 dimensions) 
-    //than with the images and the size() method will result in an unhandled expection.
+    // if the blob is not empty, extract images from it
+    // DO NOT CHECK its size  the blob is a cv::Mat in nature, but the data are stored differently (4 dimensions) 
+    // than with the images and the size() method will result in an unhandled expection.
     if (!inputBlob.empty()) 
         vectorOfInputImagesFromBlob = extractImagesFromABlob(inputBlob,
                                                              size,
                                                              scaleFactor, 
-                                                             mean); //see extractImagesFromABlob.hpp
+                                                             mean); // see extractImagesFromABlob.hpp
 
-    //Try to visualize - the image should be fairly similar to the inputImg
+    // Try to visualize - the image should be fairly similar to the inputImg
     for (auto img : vectorOfInputImagesFromBlob)
     {
         cv::normalize(img, img, 0, 1, cv::NORM_MINMAX);
         cv::imshow("ok", img);
         cv::waitKey(0);
-    }//blobs
+    }// blobs
 }
 
 void visualizeAllBlobsInNetPerChannels(Net& net, cv::Mat inputBlob, cv::Size size, double scaleFactor, cv::Scalar mean)
 {
-    //For each layer in the network, we are going to perform a forward pass then store
-    //the output blobs and extract the images from them
-    for (string layer : net.getLayerNames()) //getLayerNames() gives a vector of string containing the names of every layer in the network - see prototxt for the names
+    // For each layer in the network, we are going to perform a forward pass then store
+    // the output blobs and extract the images from them
+    for (string layer : net.getLayerNames()) // getLayerNames() gives a vector of string containing the names of every layer in the network - see prototxt for the names
     {
 
-        //A container for our blobs
+        // A container for our blobs
         std::vector<cv::Mat> vectorOfBlobs;
 
-        //Perform a forward pass
-        net.setInput(inputBlob, "data"); //Set the network input - with GoogleNet, "data" is the input layer
-        net.forward(vectorOfBlobs, layer);	//Operate a forward pass, output the result of the selected layer
+        // Perform a forward pass
+        net.setInput(inputBlob, "data"); // Set the network input - with GoogleNet, "data" is the input layer
+        net.forward(vectorOfBlobs, layer); // Operate a forward pass, output the result of the selected layer
 
-                                            //For each blobs in our vectorOfBlobs
+        // For each blobs in our vectorOfBlobs
         for (cv::Mat blob : vectorOfBlobs)
         {
-            //A simple vector that will contain each filtered image (i.e. the result of each operation in the layer)
+            // A simple vector that will contain each filtered image (i.e. the result of each operation in the layer)
             std::vector<cv::Mat> vectorOfImages;
 
-            //if the blob is not empty, extract images from it
-            //DO NOT CHECK its size  the blob is a cv::Mat in nature, but the data are stored differently (4 dimensions) 
-            //than with the images and the size() method will result in an unhandled expection.
+            // if the blob is not empty, extract images from it
+            // DO NOT CHECK its size  the blob is a cv::Mat in nature, but the data are stored differently (4 dimensions) 
+            // than with the images and the size() method will result in an unhandled expection.
             if (!blob.empty()) vectorOfImages = extractImagesFromABlob(blob, 
                                                                        size,
                                                                        scaleFactor, 
-                                                                       mean); //see extractImagesFromABlob.hpp
+                                                                       mean); // see extractImagesFromABlob.hpp
 
-            //Quality check is done with CV_8U images and a JET colormap
-            //Quality check
+            // Quality check is done with CV_8U images and a JET colormap
+            // Quality check
             for (auto image : vectorOfImages)
             {
                 std::cout << "nbOfImages : " << vectorOfImages.size() << std::endl;
                 std::cout << "channels : " << image.channels() << std::endl;
                 std::cout << "size : " << image.size() << std::endl;
 
-                //Display each 2D channel contained in the current image
-                //The channels are obtained using the split method
+                // Display each 2D channel contained in the current image
+                // The channels are obtained using the split method
                 std::vector< cv::Mat > channels;
                 cv::split(image, channels);
                 for (auto channel : channels)
                 {
-                    channel.convertTo(channel, CV_8UC1); //float to unsigned char for applyColorMap only
+                    channel.convertTo(channel, CV_8UC1); // float to unsigned char for applyColorMap only
                     cv::normalize(channel, channel, 0, 255, cv::NORM_MINMAX);
                     cv::Mat tmpMatColored;
                     cv::cvtColor(channel, tmpMatColored, cv::COLOR_GRAY2BGR);
                     cv::applyColorMap(tmpMatColored, tmpMatColored, cv::COLORMAP_JET);
                     cv::imshow(layer + " : output", tmpMatColored);
                     cv::waitKey(0);
-                }//for loop on channels
-            }//for loop on images
+                }// for loop on channels
+            }// for loop on images
 
-             //Destroy bothering windows from Quality check
+             // Destroy bothering windows from Quality check
             cv::destroyAllWindows();
 
-        } //for loop on blobs
-    } //for loop on layers
+        } // for loop on blobs
+    } // for loop on layers
 }
 
 void visualizeAllBlobsInNetPerChannelsLikeDIGITS(Net& net, cv::Mat inputBlob, cv::Size size, double scaleFactor, cv::Scalar mean)
@@ -225,16 +225,16 @@ void visualizeAllBlobsInNetPerChannelsLikeDIGITS(Net& net, cv::Mat inputBlob, cv
 
 int main(int argc, char **argv)
 {
-    //Load the model parameters paths in memory
-    //You will find the caffemodel there: http://dl.caffe.berkeleyvision.org/bvlc_googlenet.caffemodel
+    // Load the model parameters paths in memory
+    // You will find the caffemodel there: http://dl.caffe.berkeleyvision.org/bvlc_googlenet.caffemodel
     std::string dataPath = ".." + sep + "data" + sep;
-    std::string modelTxt = dataPath+"bvlc_googlenet.prototxt"; //definition of the model
-    std::string modelBin = dataPath+"bvlc_googlenet.caffemodel"; //weights of the model
-    std::string imageFile = dataPath+"space_shuttle.jpg"; //image to read - you can use your own
-    std::string imageFile2 = dataPath+"space_shuttle2.jpg"; //image to read - you can use your own
-    std::string classNameFile = dataPath+"synset_words.txt";//used for classification only - not presented here
+    std::string modelTxt = dataPath+"bvlc_googlenet.prototxt"; // definition of the model
+    std::string modelBin = dataPath+"bvlc_googlenet.caffemodel"; // weights of the model
+    std::string imageFile = dataPath+"space_shuttle.jpg"; // image to read - you can use your own
+    std::string imageFile2 = dataPath+"space_shuttle2.jpg"; // image to read - you can use your own
+    std::string classNameFile = dataPath+"synset_words.txt";// used for classification only - not presented here
 
-    //Try to instantiate the network with its parameters
+    // Try to instantiate the network with its parameters
     Net net;
     try {
         net = dnn::readNetFromCaffe(modelTxt, modelBin);
@@ -253,7 +253,7 @@ int main(int argc, char **argv)
         }
     }
     
-    //Read the image to process with the network
+    // Read the image to process with the network
     Mat img = imread(imageFile);
     Mat img2 = imread(imageFile2);
     if (img.empty())
@@ -262,27 +262,28 @@ int main(int argc, char **argv)
         exit(-1);
     }
     
-    //Input images in a vector
+    // Input images in a vector
     std::vector< cv::Mat > vectorOfInputImages;
     vectorOfInputImages.push_back(img);
     vectorOfInputImages.push_back(img2);
 
-    //Convert the image into a blob so that we could feed the network with it.
-    //The blob will internally store the image in floating point precision (CV_32F).
-    Mat inputBlob = blobFromImages(vectorOfInputImages, //the images to add to the blob
-                                   1.0f, //a multiplicative factor, in float due to the conversion realized by blobFromImage
-                                   Size(224, 224), //the size of the image in the blob / should correspond to the expected input size of the data in the network / either crop/bilinear resizing can be used
-                                   Scalar(104, 117, 123), //the mean of the images / in practice you should calculate it from your dataset / it is used to mean center the images
-                                   false); //a boolean to convert a BGR image (default in OpenCV) to a RGB image / the format should correspond to the one used to train you network!
+    // Convert the image into a blob so that we could feed the network with it.
+    // The blob will internally store the image in floating point precision (CV_32F).
+    Mat inputBlob = blobFromImages(vectorOfInputImages, // the images to add to the blob
+                                   1.0f, // a multiplicative factor, in float due to the conversion realized by blobFromImage
+                                   Size(224, 224), // the size of the image in the blob / should correspond to the expected input size of the data in the network / either crop/bilinear resizing can be used
+                                   Scalar(104, 117, 123), // the mean of the images / in practice you should calculate it from your dataset / it is used to mean center the images
+                                   false); // a boolean to convert a BGR image (default in OpenCV) to a RGB image / the format should correspond to the one used to train you network!
 
-    //Visualize the inputs = gather the input Mat for the inputBlob, it should looks like the same image than the original after normalization
+    // Visualize the inputs = gather the input Mat for the inputBlob, it should looks like the same image than the original after normalization
     visualizeInputsFromBlob(inputBlob, img.size(), 1.0f, cv::Scalar(104, 117, 123));
 
-    //Visualize the ouput of each layer
+    // Visualize the ouput of each layer
+    // In this method, a per feature normalization is made
     visualizeAllBlobsInNetPerChannels(net, inputBlob, img.size(), -1, cv::Scalar(-1));
     
-    //Visualize the ouput of each layer like Nvidia DIGITS
+    // Visualize the ouput of each layer like Nvidia DIGITS
     visualizeAllBlobsInNetPerChannelsLikeDIGITS(net, inputBlob, img.size(), -1, cv::Scalar(-1));
     
     return 0;
-} //main
+} // main
