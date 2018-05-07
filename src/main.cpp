@@ -136,6 +136,93 @@ void visualizeAllBlobsInNetPerChannels(Net& net, cv::Mat inputBlob, cv::Size siz
     } //for loop on layers
 }
 
+void visualizeAllBlobsInNetPerChannelsLikeDIGITS(Net& net, cv::Mat inputBlob, cv::Size size, double scaleFactor, cv::Scalar mean)
+{
+    // For each layer in the network, we are going to perform a forward pass then store
+    // the output blobs and extract the images from them
+    for (string layer : net.getLayerNames()) //getLayerNames() gives a vector of string containing the names of every layer in the network - see prototxt for the names
+    {
+        // Let's display our filtered images (with more explanation)
+        // A container for our output blobs
+        std::vector<cv::Mat> vectorOfBlobs;
+        
+        // Perform a forward pass
+        net.setInput(inputBlob, "data"); // Set the network input - with GoogleNet, "data" is the input layer
+        net.forward(vectorOfBlobs, layer);	// Operate a forward pass, output the result of the selected layer
+        std::cout << "vectorOfBlobs size : " << vectorOfBlobs.size() << std::endl;
+        
+        // For each blobs in our vectorOfBlobs
+        for (cv::Mat blob : vectorOfBlobs)
+        {
+            // A simple vector that will contain each filtered image (i.e. the result of each operation in the layer)
+            std::vector<cv::Mat> vectorOfImages;
+
+            // if the blob is not empty, extract images from it
+            // DO NOT CHECK its size  the blob is a cv::Mat in nature, but the data are stored differently (4 dimensions) 
+            // than with the images and the size() method will result in an unhandled expection.
+            if (!blob.empty()) vectorOfImages = extractImagesFromABlob(blob, 
+                                                                       size,
+                                                                       scaleFactor, 
+                                                                       mean); //see extractImagesFromABlob.hpp
+
+            // Quality check is done with CV_8U images and a JET colormap
+            // Quality check
+            for (auto image : vectorOfImages)
+            {
+                std::cout << "nbOfImages : " << vectorOfImages.size() << std::endl;
+                std::cout << "channels : " << image.channels() << std::endl;
+                std::cout << "size : " << image.size() << std::endl;
+
+                // Display each 2D channel contained in the current image
+                // The channels are obtained using the split method
+                std::vector< cv::Mat > channels;
+                cv::split(image, channels);
+
+                // Gather batch maximum and batch minimum values
+                // They will be used to perfom a simple normalization 
+                // ( in this process, we aim to copy the visualization proposed by Nvidia DIGITS in the vis_square available here (May 2018)
+                //  https://github.com/NVIDIA/DIGITS/blob/master/digits/utils/image.py )
+                double gmin, gmax;
+                bool init = false;
+                for (auto channel : channels)
+                {
+                    double min, max;
+                    cv::minMaxLoc(channel, &min, &max);
+                    if (!init) {
+                        gmin = min;
+                        gmax = max;
+                        init = true;
+                    }
+                    if (gmin > min) gmin = min;
+                    if (gmax < max) gmax = max;
+                }
+
+                // Actually perform the normalization on every feature map (i.e. channel)
+                // Convert the normalized feature map in unsigned char to apply a colormap
+                // Then display or save the image
+                for (auto channel : channels)
+                {
+                    channel -= gmin;
+                    if (gmax > 0)
+                        channel /= gmax;
+                    channel *= 255;
+                    channel.convertTo(channel, CV_8UC1); // float to unsigned char for applyColorMap only
+
+                    cv::Mat tmpMatColored;
+                    cv::cvtColor(channel, tmpMatColored, cv::COLOR_GRAY2BGR);
+                    cv::applyColorMap(tmpMatColored, tmpMatColored, cv::COLORMAP_JET);
+                    cv::imshow(layer, tmpMatColored);                    
+                    cv::waitKey(0);
+                }// for loop on channels
+            }// for loop on images
+
+            // Destroy bothering windows from Quality check
+            cv::destroyAllWindows();
+
+        } // for loop on blobs
+    } // for loop on layers
+}
+
 int main(int argc, char **argv)
 {
     //Load the model parameters paths in memory
@@ -193,6 +280,9 @@ int main(int argc, char **argv)
 
     //Visualize the ouput of each layer
     visualizeAllBlobsInNetPerChannels(net, inputBlob, img.size(), -1, cv::Scalar(-1));
+    
+    //Visualize the ouput of each layer like Nvidia DIGITS
+    visualizeAllBlobsInNetPerChannelsLikeDIGITS(net, inputBlob, img.size(), -1, cv::Scalar(-1));
     
     return 0;
 } //main
